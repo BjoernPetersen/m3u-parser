@@ -23,6 +23,8 @@ sealed class MediaLocation {
     abstract val url: URL
 
     companion object {
+        private const val FILE_PROTOCOL = "file"
+
         /**
          * Creates a MediaLocation instance based on the given location.
          *
@@ -34,10 +36,9 @@ sealed class MediaLocation {
         @JvmStatic
         @JvmOverloads
         operator fun invoke(location: String, dir: Path? = null): MediaLocation {
-            val path = tryParsePath(location, dir) ?: tryParseFileUrl(location)
-            return if (path != null) MediaPath(path)
-            else tryParseUrl(location)
-                ?.let { MediaUrl(it) }
+            return tryParseFileUrl(location)?.let { MediaPath(it) }
+                ?: tryParseUrl(location)?.let { MediaUrl(it) }
+                ?: tryParsePath(location, dir)?.let { MediaPath(it) }
                 ?: throw IllegalArgumentException("Could not parse as URL or path: $location")
         }
 
@@ -53,8 +54,8 @@ sealed class MediaLocation {
         private fun tryParseFileUrl(location: String): Path? {
             return try {
                 val url = URL(location)
-                val uri = url.toURI()
-                Paths.get(uri)
+                if (url.protocol == FILE_PROTOCOL) Paths.get(url.toURI())
+                else null
             } catch (e: MalformedURLException) {
                 null
             } catch (e: URISyntaxException) {

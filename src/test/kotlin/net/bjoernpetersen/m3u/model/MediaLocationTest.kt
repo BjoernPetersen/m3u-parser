@@ -2,13 +2,12 @@ package net.bjoernpetersen.m3u.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.InstanceOfAssertFactories
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.net.URL
+import org.junit.jupiter.api.condition.EnabledOnOs
+import org.junit.jupiter.api.condition.OS
 import java.nio.file.Paths
 
-@Disabled
 class MediaLocationTest {
     @Test
     fun `relative path`() {
@@ -32,12 +31,11 @@ class MediaLocationTest {
 
     @Test
     fun `file URL`() {
-        val urlString = "file:///$TEST_FILE"
-        val url = URL(urlString)
-        val path = Paths.get(url.toURI())
-        assertThat(MediaLocation(urlString))
+        val path = Paths.get(TEST_FILE).toAbsolutePath()
+        val url = path.toUri().toURL().toExternalForm()
+        assertThat(MediaLocation(url))
             .asInstanceOf(InstanceOfAssertFactories.type(MediaPath::class.java))
-            .returns(path.toUri().toURL().toString()) { it.url.toExternalForm() }
+            .returns(url) { it.url.toExternalForm() }
             .returns(path) { it.path }
     }
 
@@ -49,9 +47,11 @@ class MediaLocationTest {
             .returns(url) { it.url.toExternalForm() }
     }
 
+    // Unix systems seem to accept any protocol as a Path
+    @EnabledOnOs(OS.WINDOWS)
     @Test
     fun invalid() {
-        val location = "path:///test.mp3"
+        val location = "notaprotocol:///test.mp3"
         assertThrows<IllegalArgumentException> {
             MediaLocation(location)
         }
