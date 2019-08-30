@@ -1,0 +1,106 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@1.0.5
+
+executors:
+  jdk:
+    docker:
+      - image: openjdk:8-jdk-slim
+    environment:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+  jdk-full:
+    docker:
+      - image: openjdk:8-jdk
+    environment:
+      GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+commands:
+  with_cache:
+    parameters:
+      steps:
+        type: steps
+    steps:
+      - restore_cache:
+          keys:
+            - v1-{{ checksum "build.gradle.kts" }}-{{ checksum "buildSrc/src/main/kotlin/Plugin.kt" }}-{{ checksum "buildSrc/src/main/kotlin/Lib.kt" }}
+            - v1-{{ checksum "build.gradle.kts" }}-{{ checksum "buildSrc/src/main/kotlin/Plugin.kt" }}
+            - v1-{{ checksum "build.gradle.kts" }}
+            - v1-
+      - steps: << parameters.steps >>
+
+jobs:
+  compile:
+    executor: jdk
+    steps:
+      - checkout
+      - with_cache:
+          steps:
+            - run:
+                command: ./gradlew classes
+                name: Compiling main classes
+            - save_cache:
+                key: v1-{{ checksum "build.gradle.kts" }}-{{ checksum "buildSrc/src/main/kotlin/Plugin.kt" }}-{{ checksum "buildSrc/src/main/kotlin/Lib.kt" }}
+                paths:
+                  - ~/.gradle
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - build
+                  - buildSrc/build
+
+  check:
+    executor: jdk-full
+    steps:
+      - checkout
+      - with_cache:
+          steps:
+            - attach_workspace:
+                at: .
+            - run:
+                command: ./gradlew check
+                name: Running tests
+            - store_test_results:
+                path: build/test-results
+            - store_artifacts:
+                path: build/reports
+            - codecov/upload
+
+  fossa_build:
+    executor: jdk-full
+    steps:
+      - checkout
+      - with_cache:
+          steps:
+            - run:
+                command: |
+                  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
+                name: Installing fossa-cli
+            - run: fossa init
+            - run: fossa analyze
+
+  fossa_test:
+    executor: jdk-full
+    steps:
+      - checkout
+      - with_cache:
+          steps:
+            - run:
+                command: |
+                  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
+                name: Installing fossa-cli
+            - run: fossa test
+
+workflows:
+  full_workflow:
+    jobs:
+      - compile
+      - fossa_build:
+          requires:
+            - compile
+      - fossa_test:
+          requires:
+            - fossa_build
+      - check:
+          requires:
+            - compile
