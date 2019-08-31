@@ -57,7 +57,7 @@ object M3uParser {
     @JvmStatic
     @JvmOverloads
     fun parse(m3uContentReader: InputStreamReader, baseDir: Path? = null): List<M3uEntry> {
-        return m3uContentReader.useLines { parse(it, baseDir) }
+        return m3uContentReader.buffered().useLines { parse(it, baseDir) }
     }
 
     /**
