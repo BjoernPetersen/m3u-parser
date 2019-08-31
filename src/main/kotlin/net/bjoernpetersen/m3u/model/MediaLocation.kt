@@ -88,6 +88,9 @@ sealed class MediaLocation {
  */
 class MediaPath internal constructor(val path: Path) : MediaLocation() {
     override val url: URL by lazy { path.toUri().toURL() }
+    override fun toString(): String {
+        return path.toString()
+    }
 }
 
 /**
