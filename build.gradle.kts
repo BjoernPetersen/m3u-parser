@@ -170,7 +170,7 @@ publishing {
             artifact(tasks.getByName("sourcesJar"))
 
             pom {
-                name.set("MusicBot")
+                name.set("m3u-parser")
                 description.set("Library to parse .m3u playlist files.")
                 // TODO adjust
                 url.set("https://github.com/BjoernPetersen/m3u-parser")
