@@ -96,12 +96,14 @@ object M3uParser {
             currentLine = filtered.next()
 
             while (currentLine.startsWith(COMMENT_START)) {
-                match = infoRegex.matchEntire(currentLine)
-                if (match == null) {
-                    logger.debug { "Ignoring comment line $currentLine" }
-                    if (filtered.hasNext()) currentLine = filtered.next()
-                    else return entries
-                } else break
+                val newMatch = infoRegex.matchEntire(currentLine)
+                if (newMatch != null) {
+                    if (match != null) logger.debug { "Ignoring info line: ${match!!.value}" }
+                    match = newMatch
+                } else logger.debug { "Ignoring comment line $currentLine" }
+
+                if (filtered.hasNext()) currentLine = filtered.next()
+                else return entries
             }
 
             val entry = if (currentLine.startsWith(COMMENT_START)) continue
