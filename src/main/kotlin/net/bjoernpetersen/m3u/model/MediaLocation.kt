@@ -22,6 +22,10 @@ sealed class MediaLocation {
      */
     abstract val url: URL
 
+    override fun toString(): String {
+        return url.toExternalForm()
+    }
+
     companion object {
         private const val FILE_PROTOCOL = "file"
 
@@ -84,9 +88,6 @@ sealed class MediaLocation {
  */
 class MediaPath internal constructor(val path: Path) : MediaLocation() {
     override val url: URL by lazy { path.toUri().toURL() }
-    override fun toString(): String {
-        return "MediaPath(path=$path)"
-    }
 }
 
 /**
@@ -94,8 +95,4 @@ class MediaPath internal constructor(val path: Path) : MediaLocation() {
  *
  * The [URL][url] may also point to a local file if it isn't using the "`file`" protocol.
  */
-class MediaUrl internal constructor(override val url: URL) : MediaLocation() {
-    override fun toString(): String {
-        return "MediaUrl(url=$url)"
-    }
-}
+class MediaUrl internal constructor(override val url: URL) : MediaLocation()
