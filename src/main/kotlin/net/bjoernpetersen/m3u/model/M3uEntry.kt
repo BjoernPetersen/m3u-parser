@@ -9,7 +9,7 @@ import java.time.Duration
  * @param duration the media item's duration, or null
  * @param title the media item's title, or null
  */
-data class M3uEntry(
+data class M3uEntry @JvmOverloads constructor(
     val location: MediaLocation,
     val duration: Duration? = null,
     val title: String? = null
