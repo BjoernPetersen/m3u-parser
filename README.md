@@ -62,12 +62,12 @@ val m3uFile = Paths.get("myplaylist.m3u")
 val fileEntries: List<M3uEntry> = M3uParser.parse(m3uFile)
 
 // You may also pass in an InputStreamReader
-val m3uStream: InputStream = javaClass.getResourceAsStream("myplaylist.m3u").reader()
+val m3uStream: InputStream = javaClass.getResourceAsStream("myplaylist.m3u")
 val m3uReader: InputStreamReader = m3uStream.reader()
 val streamEntries: List<M3uEntry> = M3uParser.parse(m3uReader)
 
 // Passing in the content of an M3U file as a String also works
 val someWeirdApi = TODO("Not real")
-val m3uContent: String = someApiObject.getPlaylist("Best of Willy Astor")
+val m3uContent: String = someWeirdApi.getPlaylist("Best of Willy Astor")
 val entries: List<M3uEntry> = M3uParser.parse(m3uContent)
 ```
