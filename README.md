@@ -90,3 +90,9 @@ To get the contents of that playlist, you'll need to pass it to the parser again
 val nestedM3uLocation: MediaPath = TODO("...")
 M3uParser.parse(nestedM3uLocation.path)
 ```
+
+## License
+
+This project is released under the MIT License. That includes every file in this repository,
+unless explicitly stated otherwise at the top of a file.
+A copy of the license text can be found in the [LICENSE file](LICENSE).
