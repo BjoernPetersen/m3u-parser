@@ -47,7 +47,8 @@ class M3uParserExampleTest {
         return listOf(
             "wiki_extended.m3u",
             "wiki_extended_missing_header.m3u",
-            "wiki_extended_comments.m3u"
+            "wiki_extended_comments.m3u",
+            "wiki_extended_duplicate_info_line.m3u"
         ).map { name ->
             dynamicTest(name) {
                 assertThat(M3uParser.parse(javaClass.getResourceAsStream(name).reader()))
