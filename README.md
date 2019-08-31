@@ -71,3 +71,21 @@ val someWeirdApi = TODO("Not real")
 val m3uContent: String = someWeirdApi.getPlaylist("Best of Willy Astor")
 val entries: List<M3uEntry> = M3uParser.parse(m3uContent)
 ```
+
+### Nested playlists
+
+If your M3U file contains the path of another playlist file
+
+`MyPlaylist.m3u`
+
+```m3u
+AnotherPlayList.m3u
+```
+
+then you'll get a `M3uEntry` with a `MediaPath` location for that file.
+To get the contents of that playlist, you'll need to pass it to the parser again:
+
+```kotlin
+val nestedM3uLocation: MediaPath = TODO("...")
+M3uParser.parse(nestedM3uLocation.path)
+```
