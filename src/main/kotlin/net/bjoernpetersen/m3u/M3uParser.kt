@@ -36,6 +36,8 @@ object M3uParser {
     /**
      * Parses the specified file.
      *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
      * @param m3uFile a path to an .m3u file
      * @param charset the file's encoding, defaults to UTF-8
      * @return a list of all contained entries in order
@@ -50,6 +52,8 @@ object M3uParser {
     /**
      * Parses the [InputStream] from the specified reader.
      *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
      * @param m3uContentReader a reader reading the content of an `.m3u` file
      * @param baseDir a base dir for resolving relative paths
      * @return a list of all parsed entries in order
@@ -62,6 +66,8 @@ object M3uParser {
 
     /**
      * Parses the specified content of a `.m3u` file.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
      *
      * @param m3uContent the content of a `.m3u` file
      * @param baseDir a base dir for resolving relative paths
