@@ -98,6 +98,7 @@ object M3uParser {
             while (currentLine.startsWith(COMMENT_START)) {
                 match = infoRegex.matchEntire(currentLine)
                 if (match == null) {
+                    logger.debug { "Ignoring comment line $currentLine" }
                     if (filtered.hasNext()) currentLine = filtered.next()
                     else return entries
                 } else break
@@ -113,6 +114,7 @@ object M3uParser {
             match = null
 
             if (entry != null) entries.add(entry)
+            else logger.warn("Ignored line $currentLine")
         }
 
         return entries
