@@ -66,41 +66,10 @@ jobs:
                 path: build/reports
             - codecov/upload
 
-  fossa_build:
-    executor: jdk-full
-    steps:
-      - checkout
-      - with_cache:
-          steps:
-            - run:
-                command: |
-                  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
-                name: Installing fossa-cli
-            - run: fossa init
-            - run: fossa analyze
-
-  fossa_test:
-    executor: jdk-full
-    steps:
-      - checkout
-      - with_cache:
-          steps:
-            - run:
-                command: |
-                  curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | bash
-                name: Installing fossa-cli
-            - run: fossa test
-
 workflows:
   full_workflow:
     jobs:
       - compile
-      - fossa_build:
-          requires:
-            - compile
-      - fossa_test:
-          requires:
-            - fossa_build
       - check:
           requires:
             - compile
