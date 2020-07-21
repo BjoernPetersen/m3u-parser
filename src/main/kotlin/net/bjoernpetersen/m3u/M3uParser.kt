@@ -79,6 +79,8 @@ object M3uParser {
         return parse(m3uContent.lineSequence(), baseDir)
     }
 
+    // TODO: fix detekt issues
+    @Suppress("NestedBlockDepth", "ReturnCount")
     private fun parse(lines: Sequence<String>, baseDir: Path?): List<M3uEntry> {
         val filtered = lines
             .filterNot { it.isBlank() }
