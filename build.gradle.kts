@@ -3,7 +3,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.diffplug.gradle.spotless") version Plugin.SPOTLESS
+    id("com.diffplug.spotless") version Plugin.SPOTLESS
     id("io.gitlab.arturbosch.detekt") version Plugin.DETEKT
     id("com.github.ben-manes.versions") version Plugin.VERSIONS
     jacoco
@@ -125,6 +125,13 @@ tasks {
     withType<Jar> {
         from(project.projectDir) {
             include("LICENSE")
+        }
+    }
+
+    dependencyUpdates {
+        rejectVersionIf {
+            val version = candidate.version
+            isUnstable(version, currentVersion) || isWrongPlatform(version, currentVersion)
         }
     }
 }
