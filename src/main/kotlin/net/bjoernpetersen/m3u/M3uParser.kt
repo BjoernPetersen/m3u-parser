@@ -1,8 +1,5 @@
 package net.bjoernpetersen.m3u
 
-import mu.KotlinLogging
-import net.bjoernpetersen.m3u.model.M3uEntry
-import net.bjoernpetersen.m3u.model.MediaLocation
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -11,6 +8,9 @@ import java.nio.file.Path
 import java.time.Duration
 import java.util.LinkedList
 import kotlin.streams.asSequence
+import mu.KotlinLogging
+import net.bjoernpetersen.m3u.model.M3uEntry
+import net.bjoernpetersen.m3u.model.MediaLocation
 
 /**
  * Can be used to parse `.m3u` files.
