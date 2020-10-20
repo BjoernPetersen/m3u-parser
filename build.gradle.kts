@@ -68,20 +68,10 @@ jacoco {
 }
 
 tasks {
-    "dokka"(DokkaTask::class) {
-        outputFormat = "html"
-        outputDirectory = "$buildDir/kdoc"
-    }
-
-    val dokkaJavadoc by creating(DokkaTask::class) {
-        outputFormat = "javadoc"
-        outputDirectory = "$buildDir/javadoc"
-    }
-
-    val javadocJar by creating(Jar::class) {
+    create("javadocJar", Jar::class) {
         dependsOn("dokkaJavadoc")
         archiveClassifier.set("javadoc")
-        from("$buildDir/javadoc")
+        from("$buildDir/dokka/javadoc")
     }
 
     "processResources"(ProcessResources::class) {
