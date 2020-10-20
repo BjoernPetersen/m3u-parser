@@ -29,7 +29,8 @@ dependencies {
     implementation(
         group = "com.github.bjoernpetersen",
         name = "m3u-parser",
-        version = Lib.M3U_PARSER)
+        version = Lib.M3U_PARSER
+    )
 }
 ```
 
