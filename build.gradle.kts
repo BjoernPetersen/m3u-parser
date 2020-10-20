@@ -19,7 +19,7 @@ plugins {
 }
 
 group = "com.github.bjoernpetersen"
-version = "1.1.0-SNAPSHOT"
+version = "1.1.0"
 
 repositories {
     jcenter()
