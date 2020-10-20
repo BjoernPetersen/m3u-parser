@@ -84,6 +84,8 @@ sealed class MediaLocation {
 /**
  * A local media file location.
  *
+ * Important: the underlying path may also refer to a directory.
+ *
  * @param path the local file path
  */
 class MediaPath internal constructor(val path: Path) : MediaLocation() {
