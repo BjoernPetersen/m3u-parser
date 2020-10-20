@@ -1,5 +1,7 @@
 package net.bjoernpetersen.m3u
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import net.bjoernpetersen.m3u.model.M3uEntry
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -95,5 +97,51 @@ class M3uParserExampleTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun testRecursiveResolution() {
+        val files = listOf("rec_1.m3u", "rec_2.m3u", "rec_3.m3u")
+        exportFiles(files)
+        try {
+            val initial = M3uParser.parse(Paths.get(FILE_DIR, "rec_1.m3u"))
+            assertThat(initial)
+                .hasSize(4)
+
+            assertThat(M3uParser.resolveNestedPlaylists(initial))
+                .isNotSameAs(initial)
+                .hasSize(6)
+                .matches { list ->
+                    val locations = list.asSequence().map { it.location }.distinct().count()
+                    locations == list.size
+                }
+        } finally {
+            deleteFiles(files)
+        }
+    }
+
+    private fun deleteFiles(paths: List<String>) {
+        paths.map { Paths.get(FILE_DIR, it) }.forEach {
+            Files.deleteIfExists(it)
+        }
+    }
+
+    private fun exportFiles(paths: List<String>) {
+        val parent = Paths.get(FILE_DIR)
+        if (!Files.isDirectory(parent)) {
+            Files.createDirectories(parent)
+        }
+        for (name in paths) {
+            val path = parent.resolve(name)
+            javaClass.getResourceAsStream(name).reader().use { reader ->
+                Files.newBufferedWriter(path, Charsets.UTF_8).use { writer ->
+                    reader.copyTo(writer)
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val FILE_DIR = "build/tmp/m3us"
     }
 }

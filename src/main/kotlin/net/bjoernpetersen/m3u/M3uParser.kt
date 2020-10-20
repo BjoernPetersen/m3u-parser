@@ -1,5 +1,6 @@
 package net.bjoernpetersen.m3u
 
+import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -11,6 +12,7 @@ import kotlin.streams.asSequence
 import mu.KotlinLogging
 import net.bjoernpetersen.m3u.model.M3uEntry
 import net.bjoernpetersen.m3u.model.MediaLocation
+import net.bjoernpetersen.m3u.model.MediaPath
 
 /**
  * Can be used to parse `.m3u` files.
@@ -41,7 +43,10 @@ object M3uParser {
      * @param m3uFile a path to an .m3u file
      * @param charset the file's encoding, defaults to UTF-8
      * @return a list of all contained entries in order
+     * @throws IOException if file can't be read
+     * @throws IllegalArgumentException if file is not a regular file
      */
+    @Throws(IOException::class)
     @JvmStatic
     @JvmOverloads
     fun parse(m3uFile: Path, charset: Charset = Charsets.UTF_8): List<M3uEntry> {
@@ -77,6 +82,23 @@ object M3uParser {
     @JvmOverloads
     fun parse(m3uContent: String, baseDir: Path? = null): List<M3uEntry> {
         return parse(m3uContent.lineSequence(), baseDir)
+    }
+
+    /**
+     * Recursively resolves all playlist files contained as entries in the given list.
+     *
+     * Note that unresolvable playlist file entries will be dropped.
+     *
+     * @param entries a list of playlist entries
+     * @param charset the encoding to be used to read nested playlist files, defaults to UTF-8
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun resolveNestedPlaylists(
+        entries: List<M3uEntry>,
+        charset: Charset = Charsets.UTF_8
+    ): List<M3uEntry> {
+        return resolveRecursively(entries, charset)
     }
 
     // TODO: fix detekt issues
@@ -146,5 +168,40 @@ object M3uParser {
             ?.let { Duration.ofSeconds(it) }
         val title = infoMatch.groups[TITLE]?.value
         return M3uEntry(mediaLocation, duration, title)
+    }
+
+    private fun resolveRecursively(
+        source: List<M3uEntry>,
+        charset: Charset,
+        result: MutableList<M3uEntry> = LinkedList()
+    ): List<M3uEntry> {
+        for (entry in source) {
+            val location = entry.location
+            if (location is MediaPath && location.isPlaylistPath) {
+                resolveNestedPlaylist(location.path, charset, result)
+            } else {
+                result.add(entry)
+            }
+        }
+        return result
+    }
+
+    private fun resolveNestedPlaylist(
+        path: Path,
+        charset: Charset,
+        result: MutableList<M3uEntry>
+    ) {
+        if (!Files.isRegularFile(path)) {
+            return
+        }
+
+        val parsed = try {
+            parse(path, charset)
+        } catch (e: IOException) {
+            logger.warn(e) { "Could not parse nested playlist file: $path" }
+            return
+        }
+
+        resolveRecursively(parsed, charset, result)
     }
 }
