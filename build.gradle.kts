@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.diffplug.spotless.LineEnding
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -18,7 +20,7 @@ plugins {
 }
 
 group = "com.github.bjoernpetersen"
-version = "1.0.1-SNAPSHOT"
+version = "1.1.0-SNAPSHOT"
 
 repositories {
     jcenter()
@@ -69,13 +71,11 @@ tasks {
         outputDirectory = "$buildDir/kdoc"
     }
 
-    @Suppress("UNUSED_VARIABLE")
     val dokkaJavadoc by creating(DokkaTask::class) {
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/javadoc"
     }
 
-    @Suppress("UNUSED_VARIABLE")
     val javadocJar by creating(Jar::class) {
         dependsOn("dokkaJavadoc")
         archiveClassifier.set("javadoc")
@@ -176,10 +176,10 @@ publishing {
             artifact(tasks.getByName("javadocJar"))
             artifact(tasks.getByName("sourcesJar"))
 
+
             pom {
                 name.set("m3u-parser")
                 description.set("Library to parse .m3u playlist files.")
-                // TODO adjust
                 url.set("https://github.com/BjoernPetersen/m3u-parser")
 
                 licenses {
