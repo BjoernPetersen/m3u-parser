@@ -47,6 +47,34 @@ class MediaLocationTest {
             .returns(url) { it.url.toExternalForm() }
     }
 
+    @Test
+    fun `playlist file`() {
+        val path = Paths.get(TEST_PLAYLIST_FILE)
+        assertThat(MediaPath(path))
+            .returns(true) { it.isPlaylistPath }
+    }
+
+    @Test
+    fun `playlist file in dir`() {
+        val path = Paths.get(TEST_DIR, TEST_PLAYLIST_FILE)
+        assertThat(MediaPath(path))
+            .returns(true) { it.isPlaylistPath }
+    }
+
+    @Test
+    fun `mp3 file is not a playlist file`() {
+        val path = Paths.get(TEST_FILE)
+        assertThat(MediaPath(path))
+            .returns(false) { it.isPlaylistPath }
+    }
+
+    @Test
+    fun `dir file is not a playlist file`() {
+        val path = Paths.get(TEST_DIR)
+        assertThat(MediaPath(path))
+            .returns(false) { it.isPlaylistPath }
+    }
+
     // Unix systems seem to accept any protocol as a Path
     @EnabledOnOs(OS.WINDOWS)
     @Test
@@ -59,6 +87,7 @@ class MediaLocationTest {
 
     private companion object {
         const val TEST_FILE = "test.mp3"
+        const val TEST_PLAYLIST_FILE = "test.m3u"
         const val TEST_DIR = "testdir"
         const val TEST_REMOTE_URL = "http://www.example.com/musik/titel4.mp3"
     }
