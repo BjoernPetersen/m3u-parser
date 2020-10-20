@@ -68,8 +68,9 @@ val m3uReader: InputStreamReader = m3uStream.reader()
 val streamEntries: List<M3uEntry> = M3uParser.parse(m3uReader)
 
 // Passing in the content of an M3U file as a String also works
-val someWeirdApi = TODO("Not real")
-val m3uContent: String = someWeirdApi.getPlaylist("Best of Willy Astor")
+val someApi = TODO("Not a real API object")
+// Returns a playlist in the M3U format
+val m3uContent: String = someApi.getPlaylist("Best of Willy Astor")
 val entries: List<M3uEntry> = M3uParser.parse(m3uContent)
 ```
 
@@ -89,6 +90,14 @@ To get the contents of that playlist, you'll need to pass it to the parser again
 ```kotlin
 val nestedM3uLocation: MediaPath = TODO("...")
 M3uParser.parse(nestedM3uLocation.path)
+```
+
+You can use the `M3uParser.resolveNestedPlaylists()` method to recursively parse all nested playlist file references:
+
+```kotlin
+val entries: List<M3uEntry> = M3uParser.parse(Paths.get("playlist.m3u"))
+// Doesn't contain any .m3u file references anymore
+val resolvedEntries: List<M3uEntry> = M3uParser.resolveNestedPlaylists(entries)
 ```
 
 ## License
