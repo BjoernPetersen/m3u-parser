@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.diffplug.spotless.LineEnding
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
