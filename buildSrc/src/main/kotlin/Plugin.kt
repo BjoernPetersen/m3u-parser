@@ -5,6 +5,6 @@ object Plugin {
 
     const val VERSIONS = "0.33.0"
 
-    const val KOTLIN = "1.4.10"
+    const val KOTLIN = "1.4.21-2"
     const val DOKKA = "1.4.10"
 }
