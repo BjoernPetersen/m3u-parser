@@ -119,7 +119,6 @@ tasks {
 }
 
 dependencies {
-    api(kotlin("stdlib-jdk8"))
     api(group = "org.slf4j", name = "slf4j-api", version = Lib.SLF4J)
     implementation(
         group = "io.github.microutils",
