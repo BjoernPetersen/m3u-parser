@@ -40,7 +40,7 @@ dependencies {
 
 ```groovy
 dependencies {
-    implementation 'com.github.bjoernpetersen:m3u-parser:$m3uParserVersion'
+    implementation "com.github.bjoernpetersen:m3u-parser:$m3uParserVersion"
 }
 ```
 
