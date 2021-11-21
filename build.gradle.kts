@@ -113,6 +113,10 @@ tasks {
         from(project.projectDir) {
             include("LICENSE")
         }
+
+        manifest {
+            attributes("Automatic-Module-Name" to "net.bjoernpetersen.m3u")
+        }
     }
 }
 
