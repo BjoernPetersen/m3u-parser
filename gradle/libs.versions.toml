@@ -1,7 +1,7 @@
 [versions]
 detekt = "1.15.0"
 jacoco = "0.8.4"
-junit = "5.7.0"
+junit = "5.8.1"
 kotlin = "1.4.21-2"
 slf4j = "1.8.0-beta4"
 
