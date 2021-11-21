@@ -22,7 +22,6 @@ version = "1.2.0"
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 idea {
