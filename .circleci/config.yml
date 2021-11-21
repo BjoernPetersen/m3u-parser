@@ -19,9 +19,9 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v2-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle/libs.versions.toml" }}
-            - v2-{{ checksum "build.gradle.kts" }}
-            - v2-
+            - v3-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle/libs.versions.toml" }}
+            - v3-{{ checksum "build.gradle.kts" }}
+            - v3-
       - steps: << parameters.steps >>
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
                 command: ./gradlew classes
                 name: Compiling main classes
             - save_cache:
-                key: v2-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle/libs.versions.toml" }}
+                key: v3-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle/libs.versions.toml" }}
                 paths:
                   - ~/.gradle
             - persist_to_workspace:
