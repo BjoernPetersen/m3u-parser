@@ -6,10 +6,10 @@ orbs:
 executors:
   jdk:
     docker:
-      - image: openjdk:11-jdk-slim
+      - image: openjdk:17-jdk-slim
   jdk-full:
     docker:
-      - image: openjdk:11-jdk
+      - image: openjdk:17-jdk
 
 commands:
   with_cache:
