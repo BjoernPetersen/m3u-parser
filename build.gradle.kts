@@ -4,16 +4,15 @@ import com.diffplug.spotless.LineEnding
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.diffplug.spotless") version Plugin.SPOTLESS
-    id("io.gitlab.arturbosch.detekt") version Plugin.DETEKT
-    id("com.github.ben-manes.versions") version Plugin.VERSIONS
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.detekt)
     jacoco
     idea
 
-    kotlin("jvm") version Plugin.KOTLIN
+    kotlin("jvm") version libs.versions.kotlin
     `java-library`
 
-    id("org.jetbrains.dokka") version Plugin.DOKKA
+    alias(libs.plugins.dokka)
     signing
     `maven-publish`
 }
@@ -22,7 +21,7 @@ group = "com.github.bjoernpetersen"
 version = "1.2.0"
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 idea {
@@ -58,13 +57,13 @@ spotless {
 }
 
 detekt {
-    toolVersion = Plugin.DETEKT
+    toolVersion = libs.versions.detekt.get()
     config = files("$rootDir/buildConfig/detekt.yml")
     buildUponDefaultConfig = true
 }
 
 jacoco {
-    toolVersion = Plugin.JACOCO
+    toolVersion = libs.versions.jacoco.get()
 }
 
 tasks {
@@ -115,45 +114,18 @@ tasks {
             include("LICENSE")
         }
     }
-
-    dependencyUpdates {
-        rejectVersionIf {
-            val version = candidate.version
-            isUnstable(version, currentVersion) || isWrongPlatform(version, currentVersion)
-        }
-    }
 }
 
 dependencies {
-    api(group = "org.slf4j", name = "slf4j-api", version = Lib.SLF4J)
-    implementation(
-        group = "io.github.microutils",
-        name = "kotlin-logging",
-        version = Lib.KOTLIN_LOGGING
-    )
+    api(libs.slf4j.api)
+    implementation(libs.kotlin.logging)
 
-    testImplementation(
-        group = "org.junit.jupiter",
-        name = "junit-jupiter-api",
-        version = Lib.JUNIT
-    )
-    testImplementation(group = "org.assertj", name = "assertj-core", version = Lib.ASSERT_J)
-    testImplementation(
-        group = "nl.jqno.equalsverifier",
-        name = "equalsverifier",
-        version = Lib.EQUALSVERIFIER
-    )
+    testImplementation(libs.junit.api)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.equalsverifier)
 
-    testRuntimeOnly(
-        group = "org.junit.jupiter",
-        name = "junit-jupiter-engine",
-        version = Lib.JUNIT
-    )
-    testRuntimeOnly(
-        group = "org.slf4j",
-        name = "slf4j-simple",
-        version = Lib.SLF4J
-    )
+    testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.slf4j.simple)
 }
 
 publishing {

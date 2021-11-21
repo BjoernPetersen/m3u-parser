@@ -1,0 +1,20 @@
+[versions]
+detekt = "1.15.0"
+jacoco = "0.8.4"
+junit = "5.7.0"
+kotlin = "1.4.21-2"
+slf4j = "1.8.0-beta4"
+
+[libraries]
+assertj-core = { module = "org.assertj:assertj-core", version = "3.18.1" }
+equalsverifier = { module = "nl.jqno.equalsverifier:equalsverifier", version = "3.5.1" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+kotlin-logging = { module = "io.github.microutils:kotlin-logging", version = "2.0.4" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+
+[plugins]
+detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.15.0" }
+dokka = { id = "org.jetbrains.dokka", version = "1.4.20" }
+spotless = { id = "com.diffplug.spotless", version = "5.9.0" }
