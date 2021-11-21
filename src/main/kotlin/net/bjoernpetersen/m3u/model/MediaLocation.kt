@@ -7,6 +7,7 @@ import java.nio.file.FileSystemNotFoundException
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import java.nio.file.Paths
+import mu.KotlinLogging
 
 /**
  * The location of a media file referenced in a `.m3u` file.
@@ -28,6 +29,7 @@ sealed class MediaLocation {
 
     companion object {
         private const val FILE_PROTOCOL = "file"
+        private val logger = KotlinLogging.logger { }
 
         /**
          * Creates a MediaLocation instance based on the given location.
@@ -51,22 +53,24 @@ sealed class MediaLocation {
                 if (dir == null) Paths.get(location)
                 else dir.resolve(location)
             } catch (e: InvalidPathException) {
+                logger.debug(e) { "Tried to parse an invalid path" }
                 null
             }
         }
 
         private fun tryParseFileUrl(location: String): Path? {
             return try {
-                val url = URL(location)
+                val url = tryParseUrl(location) ?: return null
                 if (url.protocol == FILE_PROTOCOL) Paths.get(url.toURI())
                 else null
-            } catch (e: MalformedURLException) {
-                null
             } catch (e: URISyntaxException) {
+                logger.debug(e) { "Could not convert URL for $location to a URI" }
                 null
             } catch (e: FileSystemNotFoundException) {
+                logger.debug(e) { "File system specified by $location couldn't be found" }
                 null
             } catch (e: IllegalArgumentException) {
+                logger.debug(e) { "Could not get Path for $location" }
                 null
             }
         }
@@ -75,6 +79,7 @@ sealed class MediaLocation {
             return try {
                 URL(location)
             } catch (e: MalformedURLException) {
+                logger.debug("Could not parse as URL: $location")
                 null
             }
         }
