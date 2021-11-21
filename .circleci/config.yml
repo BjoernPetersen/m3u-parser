@@ -6,14 +6,10 @@ orbs:
 executors:
   jdk:
     docker:
-      - image: openjdk:8-jdk-slim
-    environment:
-      GRADLE_OPTS: -Dorg.gradle.daemon=false
+      - image: openjdk:11-jdk-slim
   jdk-full:
     docker:
-      - image: openjdk:8-jdk
-    environment:
-      GRADLE_OPTS: -Dorg.gradle.daemon=false
+      - image: openjdk:11-jdk
 
 commands:
   with_cache:
@@ -23,10 +19,9 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - v1-{{ checksum "build.gradle.kts" }}-{{ checksum "buildSrc/src/main/kotlin/Plugin.kt" }}-{{ checksum "buildSrc/src/main/kotlin/Lib.kt" }}
-            - v1-{{ checksum "build.gradle.kts" }}-{{ checksum "buildSrc/src/main/kotlin/Plugin.kt" }}
-            - v1-{{ checksum "build.gradle.kts" }}
-            - v1-
+            - v2-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle/libs.versions.toml" }}
+            - v2-{{ checksum "build.gradle.kts" }}
+            - v2-
       - steps: << parameters.steps >>
 
 jobs:
@@ -40,7 +35,7 @@ jobs:
                 command: ./gradlew classes
                 name: Compiling main classes
             - save_cache:
-                key: v1-{{ checksum "build.gradle.kts" }}-{{ checksum "buildSrc/src/main/kotlin/Plugin.kt" }}-{{ checksum "buildSrc/src/main/kotlin/Lib.kt" }}
+                key: v2-{{ checksum "build.gradle.kts" }}-{{ checksum "gradle/libs.versions.toml" }}
                 paths:
                   - ~/.gradle
             - persist_to_workspace:
