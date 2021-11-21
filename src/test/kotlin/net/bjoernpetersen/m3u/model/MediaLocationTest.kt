@@ -1,12 +1,12 @@
 package net.bjoernpetersen.m3u.model
 
-import java.nio.file.Paths
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.InstanceOfAssertFactories
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.condition.EnabledOnOs
 import org.junit.jupiter.api.condition.OS
+import java.nio.file.Paths
 
 class MediaLocationTest {
     @Test

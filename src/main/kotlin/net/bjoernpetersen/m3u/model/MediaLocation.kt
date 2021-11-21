@@ -1,5 +1,6 @@
 package net.bjoernpetersen.m3u.model
 
+import mu.KotlinLogging
 import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.net.URL
@@ -7,7 +8,6 @@ import java.nio.file.FileSystemNotFoundException
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import java.nio.file.Paths
-import mu.KotlinLogging
 
 /**
  * The location of a media file referenced in a `.m3u` file.
