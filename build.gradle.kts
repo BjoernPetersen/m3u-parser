@@ -33,7 +33,7 @@ idea {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 
     withSourcesJar()
@@ -86,6 +86,10 @@ tasks {
         kotlinOptions {
             jvmTarget = "1.8"
         }
+    }
+
+    withType<JavaCompile> {
+        options.release.set(8)
     }
 
     withType<Test> {
