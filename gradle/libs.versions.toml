@@ -10,7 +10,7 @@ assertj-core = { module = "org.assertj:assertj-core", version = "3.21.0" }
 equalsverifier = { module = "nl.jqno.equalsverifier:equalsverifier", version = "3.8.1" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-kotlin-logging = { module = "io.github.microutils:kotlin-logging", version = "2.1.20" }
+kotlin-logging = { module = "io.github.microutils:kotlin-logging", version = "2.1.21" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
