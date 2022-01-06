@@ -26,10 +26,11 @@ import kotlin.streams.asSequence
 object M3uParser {
     private const val COMMENT_START = '#'
     private const val EXTENDED_HEADER = "${COMMENT_START}EXTM3U"
-    private const val SECONDS = "seconds"
-    private const val TITLE = "title"
+    // Using group index instead of name, because Android doesn't support named group lookup
+    private const val SECONDS = 1
+    private const val TITLE = 2
     private const val EXTENDED_INFO =
-        """${COMMENT_START}EXTINF:(?<$SECONDS>[-]?\d+).*,(?<$TITLE>.+)"""
+        """${COMMENT_START}EXTINF:([-]?\d+).*,(.+)"""
 
     private val logger = KotlinLogging.logger { }
 
@@ -124,7 +125,9 @@ object M3uParser {
                 if (newMatch != null) {
                     if (match != null) logger.debug { "Ignoring info line: ${match!!.value}" }
                     match = newMatch
-                } else logger.debug { "Ignoring comment line $currentLine" }
+                } else {
+                    logger.debug { "Ignoring comment line $currentLine" }
+                }
 
                 if (filtered.hasNext()) currentLine = filtered.next()
                 else return entries
