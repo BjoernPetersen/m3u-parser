@@ -3,6 +3,7 @@ package net.bjoernpetersen.m3u
 import net.bjoernpetersen.m3u.model.M3uEntry
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.DynamicTest.dynamicTest
 import org.junit.jupiter.api.Test
@@ -97,6 +98,30 @@ class M3uParserExampleTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun testIptv() {
+        val parsed = M3uParser.parse(javaClass.getResourceAsStream("iptv_es.m3u").reader())
+        assertThat(parsed)
+            .hasSize(260)
+            .allMatch { it.duration == null }
+            .allMatch { it.title != null }
+            .allMatch { it.title!!.isNotBlank() }
+
+        val first = parsed.first()
+        assertEquals(
+            "https://hlsliveamdgl0-lh.akamaihd.net/i/hlslive_1@586402/master.m3u8",
+            first.location.url.toString(),
+        )
+        assertEquals("Plus24.es", first.metadata["tvg-id"])
+        assertEquals("ES", first.metadata["tvg-country"])
+        assertEquals("Spanish", first.metadata["tvg-language"])
+        assertNull(first.metadata["tvg-logo"])
+        assertNull(first.metadata.logo)
+
+        val withLogo = parsed[10]
+        assertEquals("https://i.imgur.com/CnIVW9o.jpg", withLogo.metadata.logo)
     }
 
     @Test

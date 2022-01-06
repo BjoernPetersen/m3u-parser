@@ -2,6 +2,7 @@ package net.bjoernpetersen.m3u
 
 import mu.KotlinLogging
 import net.bjoernpetersen.m3u.model.M3uEntry
+import net.bjoernpetersen.m3u.model.M3uMetadata
 import net.bjoernpetersen.m3u.model.MediaLocation
 import net.bjoernpetersen.m3u.model.MediaPath
 import java.io.IOException
@@ -26,11 +27,13 @@ import kotlin.streams.asSequence
 object M3uParser {
     private const val COMMENT_START = '#'
     private const val EXTENDED_HEADER = "${COMMENT_START}EXTM3U"
+
     // Using group index instead of name, because Android doesn't support named group lookup
     private const val SECONDS = 1
-    private const val TITLE = 2
+    private const val KEY_VALUE_PAIRS = 2
+    private const val TITLE = 3
     private const val EXTENDED_INFO =
-        """${COMMENT_START}EXTINF:([-]?\d+).*,(.+)"""
+        """${COMMENT_START}EXTINF:([-]?\d+)(.*),(.+)"""
 
     private val logger = KotlinLogging.logger { }
 
@@ -169,8 +172,34 @@ object M3uParser {
         val duration = infoMatch.groups[SECONDS]?.value?.toLong()
             ?.let { if (it < 0) null else it }
             ?.let { Duration.ofSeconds(it) }
+        val metadata = parseMetadata(infoMatch.groups[KEY_VALUE_PAIRS]?.value)
         val title = infoMatch.groups[TITLE]?.value
-        return M3uEntry(mediaLocation, duration, title)
+        return M3uEntry(mediaLocation, duration, title, metadata)
+    }
+
+    private fun parseMetadata(keyValues: String?): M3uMetadata {
+        if (keyValues == null) {
+            return M3uMetadata.empty()
+        }
+
+        val keyValuePattern = Regex("""([\w-_.]+)="(.*?)"( )?""")
+        val valueByKey = HashMap<String, String>()
+        for (match in keyValuePattern.findAll(keyValues.trim())) {
+            val key = match.groups[1]!!.value
+            val value = match.groups[2]?.value?.ifBlank { null }
+            if (value == null) {
+                logger.debug { "Ignoring blank value for key $key" }
+                continue
+            }
+            val overwritten = valueByKey.put(key, value)
+            if (overwritten != null) {
+                logger.info {
+                    "Overwrote value for duplicate metadata key $key: '$overwritten' -> '$value'"
+                }
+            }
+        }
+
+        return M3uMetadata(valueByKey)
     }
 
     private fun resolveRecursively(
