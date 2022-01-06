@@ -160,7 +160,7 @@ publishing {
                     developer {
                         id.set("BjoernPetersen")
                         name.set("Björn Petersen")
-                        email.set("pheasn@gmail.com")
+                        email.set("git@bjoernpetersen.net")
                         url.set("https://github.com/BjoernPetersen")
                     }
                 }
