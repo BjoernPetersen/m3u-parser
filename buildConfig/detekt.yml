@@ -6,4 +6,6 @@ comments:
 
 style:
   ForbiddenComment:
-    values: 'FIXME:,STOPSHIP:'
+    values:
+     - "FIXME:"
+     - "STOPSHIP:"
