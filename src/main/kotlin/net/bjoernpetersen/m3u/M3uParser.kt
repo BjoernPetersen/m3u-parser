@@ -100,7 +100,7 @@ object M3uParser {
     @JvmOverloads
     fun resolveNestedPlaylists(
         entries: List<M3uEntry>,
-        charset: Charset = Charsets.UTF_8
+        charset: Charset = Charsets.UTF_8,
     ): List<M3uEntry> {
         return resolveRecursively(entries, charset)
     }
@@ -205,7 +205,7 @@ object M3uParser {
     private fun resolveRecursively(
         source: List<M3uEntry>,
         charset: Charset,
-        result: MutableList<M3uEntry> = LinkedList()
+        result: MutableList<M3uEntry> = LinkedList(),
     ): List<M3uEntry> {
         for (entry in source) {
             val location = entry.location
@@ -221,7 +221,7 @@ object M3uParser {
     private fun resolveNestedPlaylist(
         path: Path,
         charset: Charset,
-        result: MutableList<M3uEntry>
+        result: MutableList<M3uEntry>,
     ) {
         if (!Files.isRegularFile(path)) {
             return

@@ -41,11 +41,23 @@ java {
 spotless {
     kotlin {
         ktlint()
+            .editorConfigOverride(
+                mapOf(
+                    "ij_kotlin_allow_trailing_comma" to "true",
+                    "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
+                ),
+            )
         lineEndings = LineEnding.UNIX
         endWithNewline()
     }
     kotlinGradle {
         ktlint()
+            .editorConfigOverride(
+                mapOf(
+                    "ij_kotlin_allow_trailing_comma" to "true",
+                    "ij_kotlin_allow_trailing_comma_on_call_site" to "true",
+                ),
+            )
         lineEndings = LineEnding.UNIX
         endWithNewline()
     }
@@ -172,7 +184,7 @@ publishing {
                 val snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
                 url = uri(
                     if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl
-                    else releasesRepoUrl
+                    else releasesRepoUrl,
                 )
                 credentials {
                     username = project.properties["ossrh.username"]?.toString()
