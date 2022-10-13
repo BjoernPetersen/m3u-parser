@@ -6,10 +6,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.versions)
     jacoco
     idea
 
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
     `java-library`
 
     alias(libs.plugins.dokka)
