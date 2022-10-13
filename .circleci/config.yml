@@ -6,7 +6,7 @@ orbs:
 executors:
   jdk:
     docker:
-      - image: eclipse-tamurin:17
+      - image: eclipse-temurin:17
 commands:
   with_cache:
     parameters:
