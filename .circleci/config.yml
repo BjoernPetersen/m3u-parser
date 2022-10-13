@@ -6,11 +6,7 @@ orbs:
 executors:
   jdk:
     docker:
-      - image: openjdk:17-jdk-slim
-  jdk-full:
-    docker:
-      - image: openjdk:17-jdk
-
+      - image: eclipse-tamurin:17
 commands:
   with_cache:
     parameters:
@@ -45,7 +41,7 @@ jobs:
                   - buildSrc/build
 
   check:
-    executor: jdk-full
+    executor: jdk
     steps:
       - checkout
       - with_cache:
