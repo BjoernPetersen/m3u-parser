@@ -50,8 +50,11 @@ sealed class MediaLocation {
 
         private fun tryParsePath(location: String, dir: Path?): Path? {
             return try {
-                if (dir == null) Paths.get(location)
-                else dir.resolve(location)
+                if (dir == null) {
+                    Paths.get(location)
+                } else {
+                    dir.resolve(location)
+                }
             } catch (e: InvalidPathException) {
                 logger.debug(e) { "Tried to parse an invalid path" }
                 null
@@ -61,8 +64,11 @@ sealed class MediaLocation {
         private fun tryParseFileUrl(location: String): Path? {
             return try {
                 val url = tryParseUrl(location) ?: return null
-                if (url.protocol == FILE_PROTOCOL) Paths.get(url.toURI())
-                else null
+                if (url.protocol == FILE_PROTOCOL) {
+                    Paths.get(url.toURI())
+                } else {
+                    null
+                }
             } catch (e: URISyntaxException) {
                 logger.debug(e) { "Could not convert URL for $location to a URI" }
                 null
