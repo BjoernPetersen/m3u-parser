@@ -132,12 +132,16 @@ object M3uParser {
                     logger.debug { "Ignoring comment line $currentLine" }
                 }
 
-                if (filtered.hasNext()) currentLine = filtered.next()
-                else return entries
+                if (filtered.hasNext()) {
+                    currentLine = filtered.next()
+                } else {
+                    return entries
+                }
             }
 
-            val entry = if (currentLine.startsWith(COMMENT_START)) continue
-            else if (match == null) {
+            val entry = if (currentLine.startsWith(COMMENT_START)) {
+                continue
+            } else if (match == null) {
                 parseSimple(currentLine, baseDir)
             } else {
                 parseExtended(match, currentLine, baseDir)
@@ -145,8 +149,11 @@ object M3uParser {
 
             match = null
 
-            if (entry != null) entries.add(entry)
-            else logger.warn("Ignored line $currentLine")
+            if (entry != null) {
+                entries.add(entry)
+            } else {
+                logger.warn("Ignored line $currentLine")
+            }
         }
 
         return entries
