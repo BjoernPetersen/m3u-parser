@@ -5,7 +5,7 @@ junit = "5.9.1"
 slf4j = "2.0.6"
 
 [libraries]
-assertj-core = { module = "org.assertj:assertj-core", version = "3.23.1" }
+assertj-core = { module = "org.assertj:assertj-core", version = "3.24.1" }
 equalsverifier = { module = "nl.jqno.equalsverifier:equalsverifier", version = "3.12.3" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
