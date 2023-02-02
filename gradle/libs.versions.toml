@@ -6,7 +6,7 @@ slf4j = "2.0.6"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version = "3.24.2" }
-equalsverifier = { module = "nl.jqno.equalsverifier:equalsverifier", version = "3.12.4" }
+equalsverifier = { module = "nl.jqno.equalsverifier:equalsverifier", version = "3.13" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 kotlin-logging = { module = "io.github.microutils:kotlin-logging", version = "3.0.5" }
