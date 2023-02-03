@@ -23,6 +23,20 @@ sealed class MediaLocation {
      */
     abstract val url: URL
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is MediaLocation) return false
+
+        // Don't use URL.equals(), because it resolves the domain name
+        if (url.toExternalForm() != other.url.toExternalForm()) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return url.hashCode()
+    }
+
     override fun toString(): String {
         return url.toExternalForm()
     }

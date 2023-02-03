@@ -22,8 +22,8 @@ class M3uParserExampleTest {
                 titles == list.size
             }
             .matches { list ->
-                val titles = list.asSequence().map { it.location }.distinct().count()
-                titles == list.size
+                val locations = list.asSequence().map { it.location }.distinct().toList()
+                locations.size == list.size
             }
     }
 
