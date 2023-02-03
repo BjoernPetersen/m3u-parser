@@ -139,7 +139,6 @@ dependencies {
 
     testImplementation(libs.junit.api)
     testImplementation(libs.assertj.core)
-    testImplementation(libs.equalsverifier)
 
     testRuntimeOnly(libs.junit.engine)
     testRuntimeOnly(libs.slf4j.simple)
