@@ -34,7 +34,7 @@ sealed class MediaLocation {
     }
 
     override fun hashCode(): Int {
-        return url.hashCode()
+        return url.toExternalForm().hashCode()
     }
 
     override fun toString(): String {
