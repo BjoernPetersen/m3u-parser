@@ -10,7 +10,7 @@ plugins {
     jacoco
     idea
 
-    kotlin("jvm") version "1.8.22"
+    kotlin("jvm") version "1.9.10"
     `java-library`
 
     alias(libs.plugins.dokka)
