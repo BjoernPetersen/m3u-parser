@@ -15,5 +15,5 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 [plugins]
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version = "1.8.20" }
-spotless = { id = "com.diffplug.spotless", version = "6.20.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.21.0" }
 versions = { id = "com.github.ben-manes.versions", version = "0.47.0" }
