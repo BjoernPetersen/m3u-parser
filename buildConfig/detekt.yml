@@ -3,9 +3,3 @@ comments:
     active: true
   UndocumentedPublicFunction:
     active: true
-
-style:
-  ForbiddenComment:
-    values:
-     - "FIXME:"
-     - "STOPSHIP:"

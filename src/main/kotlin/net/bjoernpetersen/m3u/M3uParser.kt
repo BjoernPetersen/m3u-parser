@@ -105,7 +105,6 @@ object M3uParser {
         return resolveRecursively(entries, charset)
     }
 
-    // TODO: fix detekt issues
     @Suppress("NestedBlockDepth", "ReturnCount")
     private fun parse(lines: Sequence<String>, baseDir: Path?): List<M3uEntry> {
         val filtered = lines
