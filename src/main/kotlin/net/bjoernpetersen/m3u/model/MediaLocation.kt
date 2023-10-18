@@ -124,14 +124,14 @@ class MediaPath internal constructor(val path: Path) : MediaLocation() {
      * file name extension.
      */
     val isPlaylistPath: Boolean
-        get() = path.fileName.toString().endsWith(m3uExtension)
+        get() = path.fileName.toString().endsWith(M3U_EXTENSION)
 
     override fun toString(): String {
         return path.toString()
     }
 
     private companion object {
-        const val m3uExtension = ".m3u"
+        const val M3U_EXTENSION = ".m3u"
     }
 }
 
