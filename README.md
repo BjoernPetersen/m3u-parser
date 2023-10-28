@@ -23,12 +23,12 @@ The library is available in Maven Central. Java 8 or higher is required to use i
 
 ```kotlin
 dependencies {
-    implementation("com.github.bjoernpetersen:m3u-parser:${Lib.M3U_PARSER}")
+    implementation("com.github.bjoernpetersen:m3u-parser:$m3uParserVersion")
     // or
     implementation(
         group = "com.github.bjoernpetersen",
         name = "m3u-parser",
-        version = Lib.M3U_PARSER
+        version = "$m3uParserVersion",
     )
 }
 ```
