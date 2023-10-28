@@ -1,6 +1,6 @@
 # m3u-parser
 
-[![GitHub (pre-)release](https://img.shields.io/github/release/BjoernPetersen/m3u-parser/all.svg)](https://github.com/BjoernPetersen/m3u-parser/releases) [![GitHub license](https://img.shields.io/github/license/BjoernPetersen/m3u-parser.svg)](https://github.com/BjoernPetersen/m3u-parser/blob/main/LICENSE) [![Main](https://github.com/BjoernPetersen/m3u-parser/actions/workflows/Main.yaml/badge.svg)](https://github.com/BjoernPetersen/m3u-parser/actions/workflows/Main.yaml) [![codecov](https://codecov.io/gh/BjoernPetersen/m3u-parser/branch/main/graph/badge.svg)](https://codecov.io/gh/BjoernPetersen/m3u-parser)
+[![GitHub (pre-)release](https://img.shields.io/github/release/BjoernPetersen/m3u-parser/all.svg)](https://github.com/BjoernPetersen/m3u-parser/releases) [![GitHub license](https://img.shields.io/github/license/BjoernPetersen/m3u-parser.svg)](https://github.com/BjoernPetersen/m3u-parser/blob/main/LICENSE) [![Main](https://github.com/BjoernPetersen/m3u-parser/actions/workflows/Main.yaml/badge.svg)](https://github.com/BjoernPetersen/m3u-parser/actions/workflows/Main.yaml) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BjoernPetersen_m3u-parser&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=BjoernPetersen_m3u-parser) [![codecov](https://codecov.io/gh/BjoernPetersen/m3u-parser/branch/main/graph/badge.svg)](https://codecov.io/gh/BjoernPetersen/m3u-parser)
 
 A parser for simple and extended M3U playlist files written in Kotlin.
 
