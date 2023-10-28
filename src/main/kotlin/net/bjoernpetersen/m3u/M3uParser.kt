@@ -1,6 +1,6 @@
 package net.bjoernpetersen.m3u
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import net.bjoernpetersen.m3u.model.M3uEntry
 import net.bjoernpetersen.m3u.model.M3uMetadata
 import net.bjoernpetersen.m3u.model.MediaLocation
@@ -151,7 +151,7 @@ object M3uParser {
             if (entry != null) {
                 entries.add(entry)
             } else {
-                logger.warn("Ignored line $currentLine")
+                logger.warn { "Ignored line $currentLine" }
             }
         }
 

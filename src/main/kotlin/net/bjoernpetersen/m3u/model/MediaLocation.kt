@@ -1,6 +1,6 @@
 package net.bjoernpetersen.m3u.model
 
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.net.URL
@@ -99,7 +99,7 @@ sealed class MediaLocation {
             return try {
                 URL(location)
             } catch (e: MalformedURLException) {
-                logger.debug("Could not parse as URL: $location")
+                logger.debug { "Could not parse as URL: $location" }
                 null
             }
         }
