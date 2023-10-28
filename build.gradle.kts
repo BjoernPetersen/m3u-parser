@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.diffplug.spotless.LineEnding
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -71,7 +69,7 @@ spotless {
 
 detekt {
     toolVersion = libs.versions.detekt.get()
-    config = files("$rootDir/buildConfig/detekt.yml")
+    config.setFrom("$rootDir/buildConfig/detekt.yml")
     buildUponDefaultConfig = true
 }
 
@@ -83,7 +81,7 @@ tasks {
     create("javadocJar", Jar::class) {
         dependsOn("dokkaJavadoc")
         archiveClassifier.set("javadoc")
-        from("$buildDir/dokka/javadoc")
+        from("${layout.buildDirectory}/dokka/javadoc")
     }
 
     "processResources"(ProcessResources::class) {
