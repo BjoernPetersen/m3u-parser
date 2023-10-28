@@ -1,5 +1,5 @@
 import com.diffplug.spotless.LineEnding
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.spotless)
@@ -29,10 +29,17 @@ idea {
     }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+kotlin {
+    jvmToolchain(17)
+
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_1_8
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     withSourcesJar()
 }
@@ -90,18 +97,6 @@ tasks {
                 it.replace("%APP_VERSION%", version.toString())
             }
         }
-    }
-
-    withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
-    }
-
-    withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-        options.release.set(8)
     }
 
     withType<Test> {
