@@ -184,8 +184,8 @@ publishing {
                     },
                 )
                 credentials {
-                    username = project.properties["ossrh.username"]?.toString()
-                    password = project.properties["ossrh.password"]?.toString()
+                    username = providers.gradleProperty("ossrh.username").orNull
+                    password = providers.gradleProperty("ossrh.password").orNull
                 }
             }
         }
@@ -193,5 +193,6 @@ publishing {
 }
 
 signing {
+    useGpgCmd()
     sign(publishing.publications.getByName("Maven"))
 }
