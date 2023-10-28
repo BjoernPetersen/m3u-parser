@@ -134,6 +134,7 @@ dependencies {
     testImplementation(libs.assertj.core)
 
     testRuntimeOnly(libs.junit.engine)
+    testRuntimeOnly(libs.junit.launcher)
     testRuntimeOnly(libs.slf4j.simple)
 }
 
