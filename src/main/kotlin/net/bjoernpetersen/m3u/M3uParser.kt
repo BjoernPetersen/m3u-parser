@@ -188,7 +188,7 @@ object M3uParser {
             return M3uMetadata.empty()
         }
 
-        val keyValuePattern = Regex("""([\w-_.]+)="(.*?)"( )?""")
+        val keyValuePattern = Regex("""([\w\-.]+)="(.*?)"( )?""")
         val valueByKey = HashMap<String, String>()
         for (match in keyValuePattern.findAll(keyValues.trim())) {
             val key = match.groups[1]!!.value
