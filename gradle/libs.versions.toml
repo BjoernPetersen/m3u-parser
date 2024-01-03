@@ -5,7 +5,7 @@ junit = "5.10.1"
 slf4j = "2.0.11"
 
 [libraries]
-assertj-core = { module = "org.assertj:assertj-core", version = "3.24.2" }
+assertj-core = { module = "org.assertj:assertj-core", version = "3.25.1" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 junit-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.10.1" }
