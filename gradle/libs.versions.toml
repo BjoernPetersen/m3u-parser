@@ -1,14 +1,14 @@
 [versions]
 detekt = "1.23.5"
 jacoco = "0.8.7"
-junit = "5.10.1"
+junit = "5.10.2"
 slf4j = "2.0.11"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version = "3.25.2" }
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
-junit-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.10.1" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher", version = "1.10.2" }
 kotlin-logging = { module = "io.github.oshai:kotlin-logging", version = "6.0.3" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
