@@ -2,7 +2,7 @@
 detekt = "1.23.5"
 jacoco = "0.8.7"
 junit = "5.10.2"
-slf4j = "2.0.11"
+slf4j = "2.0.12"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version = "3.25.3" }
