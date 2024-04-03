@@ -1,5 +1,5 @@
 [versions]
-detekt = "1.23.5"
+detekt = "1.23.6"
 jacoco = "0.8.7"
 junit = "5.10.2"
 slf4j = "2.0.12"
