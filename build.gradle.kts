@@ -31,7 +31,7 @@ idea {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(22)
 
     compilerOptions {
         jvmTarget = JvmTarget.JVM_1_8
