@@ -41,6 +41,7 @@ sealed class MediaLocation {
         return url.toExternalForm()
     }
 
+    @Suppress("UndocumentedPublicClass")
     companion object {
         private const val FILE_PROTOCOL = "file"
         private val logger = KotlinLogging.logger { }

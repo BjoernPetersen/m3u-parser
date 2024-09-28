@@ -13,6 +13,7 @@ class M3uMetadata(private val data: Map<String, String>) : Map<String, String> b
     val logo: String?
         get() = data["logo"].notBlankOrNull() ?: data["tvg-logo"].notBlankOrNull()
 
+    @Suppress("UndocumentedPublicClass")
     companion object {
         /**
          * Obtain an empty instance of M3uMetadata.
