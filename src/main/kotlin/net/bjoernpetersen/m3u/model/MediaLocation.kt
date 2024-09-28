@@ -2,6 +2,7 @@ package net.bjoernpetersen.m3u.model
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.net.MalformedURLException
+import java.net.URI
 import java.net.URISyntaxException
 import java.net.URL
 import java.nio.file.FileSystemNotFoundException
@@ -98,9 +99,18 @@ sealed class MediaLocation {
 
         private fun tryParseUrl(location: String): URL? {
             return try {
-                URL(location)
+                val uri = URI(location)
+                if (uri.isAbsolute) {
+                    uri.toURL()
+                } else {
+                    logger.debug { "Received URI without scheme component: $location" }
+                    null
+                }
+            } catch (e: URISyntaxException) {
+                logger.debug(e) { "Could not parse as URI: $location" }
+                null
             } catch (e: MalformedURLException) {
-                logger.debug { "Could not parse as URL: $location" }
+                logger.debug { "Could not convert URI to URL: $location" }
                 null
             }
         }
