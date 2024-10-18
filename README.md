@@ -72,6 +72,14 @@ val someApi = TODO("Not a real API object")
 // Returns a playlist in the M3U format
 val m3uContent: String = someApi.getPlaylist("Best of Willy Astor")
 val entries: List<M3uEntry> = M3uParser.parse(m3uContent)
+
+
+// You can also use a lambda for processing each entry instead of returning a List
+val m3uFile = Paths.get("myplaylist.m3u")
+M3uParser.parse(m3uFile) { entry ->
+    println(entry->name)
+}
+
 ```
 
 ### Nested playlists

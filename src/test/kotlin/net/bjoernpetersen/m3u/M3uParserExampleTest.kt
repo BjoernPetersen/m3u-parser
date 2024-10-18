@@ -124,6 +124,36 @@ class M3uParserExampleTest {
         assertEquals("https://i.imgur.com/CnIVW9o.jpg", withLogo.metadata.logo)
     }
 
+    @TestFactory
+    fun testWikiLambda(): List<DynamicTest> {
+        return listOf(
+            "wiki_mixed.m3u",
+            "wiki_mixed_empty_lines.m3u",
+        ).map { name ->
+            dynamicTest(name) {
+                val entries = mutableListOf<M3uEntry>()
+                M3uParser.parse(javaClass.getResourceAsStream(name).reader()) { entry ->
+                    entries.add(entry)
+                }
+                assertEquals(7, entries.size)
+
+                val simple = listOf(entries[1], entries[4])
+                simple.forEach {
+                    assertThat(it)
+                        .returns(null, M3uEntry::duration)
+                        .returns(null, M3uEntry::title)
+                }
+
+                val extended = entries.filterNot { it in simple }
+                extended.forEach { entry ->
+                    assertThat(entry)
+                        .matches { it.duration != null }
+                        .matches { it.title != null }
+                }
+            }
+        }
+    }
+
     @Test
     fun testRecursiveResolution() {
         val files = listOf("rec_1.m3u", "rec_2.m3u", "rec_3.m3u")
