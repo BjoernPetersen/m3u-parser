@@ -3,3 +3,8 @@ comments:
     active: true
   UndocumentedPublicFunction:
     active: true
+complexity:
+  TooManyFunctions:
+    ignoreOverridden: true
+    thresholdInClasses: 15
+    thresholdInObjects: 15
