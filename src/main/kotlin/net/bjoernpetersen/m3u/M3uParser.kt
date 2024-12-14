@@ -55,7 +55,28 @@ object M3uParser {
     @JvmOverloads
     fun parse(m3uFile: Path, charset: Charset = Charsets.UTF_8): List<M3uEntry> {
         require(Files.isRegularFile(m3uFile)) { "$m3uFile is not a file" }
-        return parse(Files.lines(m3uFile, charset).asSequence(), m3uFile.parent)
+        val entries = mutableListOf<M3uEntry>()
+        parse(Files.lines(m3uFile, charset).asSequence(), m3uFile.parent) { entry -> entries.add(entry) }
+        return entries
+    }
+
+    /**
+     * Parses the specified file.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
+     * @param m3uFile a path to an .m3u file
+     * @param charset the file's encoding, defaults to UTF-8
+     * @param processFun a Unit to process each m3uentry
+     * @throws IOException if file can't be read
+     * @throws IllegalArgumentException if file is not a regular file
+     */
+    @Throws(IOException::class)
+    @JvmStatic
+    @JvmOverloads
+    fun parse(m3uFile: Path, charset: Charset = Charsets.UTF_8, processFun: (M3uEntry) -> Unit) {
+        require(Files.isRegularFile(m3uFile)) { "$m3uFile is not a file" }
+        parse(Files.lines(m3uFile, charset).asSequence(), m3uFile.parent, processFun)
     }
 
     /**
@@ -70,7 +91,30 @@ object M3uParser {
     @JvmStatic
     @JvmOverloads
     fun parse(m3uContentReader: InputStreamReader, baseDir: Path? = null): List<M3uEntry> {
-        return m3uContentReader.buffered().useLines { parse(it, baseDir) }
+        val entries = mutableListOf<M3uEntry>()
+        m3uContentReader.buffered().useLines {
+            parse(it, baseDir) {
+                    entry ->
+                entries.add(entry)
+            }
+        }
+        return entries
+    }
+
+    /**
+     * Parses the [InputStream] from the specified reader.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
+     * @param m3uContentReader a reader reading the content of an `.m3u` file
+     * @param baseDir a base dir for resolving relative paths
+     * @param processFun a Unit to process each m3uentry
+     *
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun parse(m3uContentReader: InputStreamReader, baseDir: Path? = null, processFun: (M3uEntry) -> Unit) {
+        return m3uContentReader.buffered().useLines { parse(it, baseDir, processFun) }
     }
 
     /**
@@ -85,7 +129,28 @@ object M3uParser {
     @JvmStatic
     @JvmOverloads
     fun parse(m3uContent: String, baseDir: Path? = null): List<M3uEntry> {
-        return parse(m3uContent.lineSequence(), baseDir)
+        val entries = mutableListOf<M3uEntry>()
+        parse(m3uContent, baseDir) {
+                entry ->
+            entries.add(entry)
+        }
+        return entries
+    }
+
+    /**
+     * Parses the specified content of a `.m3u` file.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
+     * @param m3uContent the content of a `.m3u` file
+     * @param baseDir a base dir for resolving relative paths
+     * @param processFun a Unit to process each m3uentry
+     *
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun parse(m3uContent: String, baseDir: Path? = null, processFun: (M3uEntry) -> Unit) {
+        parse(m3uContent.lineSequence(), baseDir, processFun)
     }
 
     /**
@@ -106,14 +171,14 @@ object M3uParser {
     }
 
     @Suppress("NestedBlockDepth", "ReturnCount")
-    private fun parse(lines: Sequence<String>, baseDir: Path?): List<M3uEntry> {
+    private fun parse(lines: Sequence<String>, baseDir: Path?, processFun: (M3uEntry) -> Unit) {
         val filtered = lines
             .filterNot { it.isBlank() }
             .map { it.trimEnd() }
             .dropWhile { it == EXTENDED_HEADER }
             .iterator()
 
-        if (!filtered.hasNext()) return emptyList()
+        if (!filtered.hasNext()) return
 
         val entries = LinkedList<M3uEntry>()
 
@@ -134,7 +199,7 @@ object M3uParser {
                 if (filtered.hasNext()) {
                     currentLine = filtered.next()
                 } else {
-                    return entries
+                    return
                 }
             }
 
@@ -149,13 +214,13 @@ object M3uParser {
             match = null
 
             if (entry != null) {
-                entries.add(entry)
+                processFun(entry)
             } else {
                 logger.warn { "Ignored line $currentLine" }
             }
         }
 
-        return entries
+        return
     }
 
     private fun parseSimple(location: String, baseDir: Path?): M3uEntry? {
