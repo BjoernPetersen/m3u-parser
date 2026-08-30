@@ -11,7 +11,8 @@ plugins {
 
     `java-library`
 
-    alias(libs.plugins.dokka)
+    alias(libs.plugins.dokka.core)
+    alias(libs.plugins.dokka.javadoc)
     signing
     `maven-publish`
 }
@@ -80,10 +81,11 @@ jacoco {
 
 tasks {
     register("javadocJar", Jar::class) {
-        description = "Build JAR file with Javadoc"
-        dependsOn("dokkaJavadoc")
+        dependsOn("dokkaGenerateJavadoc")
+
         archiveClassifier.set("javadoc")
-        from("${layout.buildDirectory}/dokka/javadoc")
+        description = "Build JAR file with Javadoc"
+        from(dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
     }
 
     "processResources"(ProcessResources::class) {
