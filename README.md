@@ -13,7 +13,7 @@ mixed extended/simple files.
 
 ## Dependency configuration
 
-The library is available in Maven Central. Java 8 or higher is required to use it.
+The library is available in Maven Central. Java 17 or higher is required to use it.
 
 ### Gradle
 
