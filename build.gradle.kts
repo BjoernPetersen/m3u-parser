@@ -95,7 +95,8 @@ jacoco {
 }
 
 tasks {
-    create("javadocJar", Jar::class) {
+    register("javadocJar", Jar::class) {
+        description = "Build JAR file with Javadoc"
         dependsOn("dokkaJavadoc")
         archiveClassifier.set("javadoc")
         from("${layout.buildDirectory}/dokka/javadoc")
