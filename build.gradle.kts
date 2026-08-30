@@ -14,7 +14,7 @@ plugins {
     alias(libs.plugins.dokka.core)
     alias(libs.plugins.dokka.javadoc)
     signing
-    `maven-publish`
+    alias(libs.plugins.publish)
 }
 
 group = "com.github.bjoernpetersen"
@@ -80,14 +80,6 @@ jacoco {
 }
 
 tasks {
-    register("javadocJar", Jar::class) {
-        dependsOn("dokkaGenerateJavadoc")
-
-        archiveClassifier.set("javadoc")
-        description = "Build JAR file with Javadoc"
-        from(dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
-    }
-
     "processResources"(ProcessResources::class) {
         filesMatching("**/version.properties") {
             filter {
@@ -135,55 +127,35 @@ dependencies {
     testRuntimeOnly(libs.slf4j.simple)
 }
 
-publishing {
-    publications {
-        create("Maven", MavenPublication::class) {
-            from(components["java"])
-            artifact(tasks.getByName("javadocJar"))
+mavenPublishing {
+    publishToMavenCentral()
 
-            pom {
-                name.set("m3u-parser")
-                description.set("Library to parse .m3u playlist files.")
-                url.set("https://github.com/BjoernPetersen/m3u-parser")
+    signAllPublications()
 
-                licenses {
-                    license {
-                        name.set("MIT")
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
+    pom {
+        name.set("m3u-parser")
+        description.set("Library to parse .m3u playlist files.")
+        url.set("https://github.com/BjoernPetersen/m3u-parser")
 
-                scm {
-                    connection.set("scm:git:https://github.com/BjoernPetersen/m3u-parser.git")
-                    developerConnection.set("scm:git:git@github.com:BjoernPetersen/m3u-parser.git")
-                    url.set("https://github.com/BjoernPetersen/m3u-parser")
-                }
-
-                developers {
-                    developer {
-                        id.set("BjoernPetersen")
-                        name.set("Björn Petersen")
-                        email.set("maven-central@bjoernpetersen.net")
-                        url.set("https://github.com/BjoernPetersen")
-                    }
-                }
+        licenses {
+            license {
+                name.set("MIT")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
-        repositories {
-            maven {
-                val releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-                val snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-                url = uri(
-                    if (version.toString().endsWith("SNAPSHOT")) {
-                        snapshotsRepoUrl
-                    } else {
-                        releasesRepoUrl
-                    },
-                )
-                credentials {
-                    username = providers.gradleProperty("ossrh.username").orNull
-                    password = providers.gradleProperty("ossrh.password").orNull
-                }
+
+        scm {
+            connection.set("scm:git:https://github.com/BjoernPetersen/m3u-parser.git")
+            developerConnection.set("scm:git:git@github.com:BjoernPetersen/m3u-parser.git")
+            url.set("https://github.com/BjoernPetersen/m3u-parser")
+        }
+
+        developers {
+            developer {
+                id.set("BjoernPetersen")
+                name.set("Björn Petersen")
+                email.set("maven-central@bjoernpetersen.net")
+                url.set("https://github.com/BjoernPetersen")
             }
         }
     }
@@ -191,5 +163,4 @@ publishing {
 
 signing {
     useGpgCmd()
-    sign(publishing.publications.getByName("Maven"))
 }
