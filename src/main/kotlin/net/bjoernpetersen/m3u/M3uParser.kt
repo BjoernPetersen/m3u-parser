@@ -13,6 +13,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.time.Duration
 import java.util.LinkedList
+import java.util.Map.entry
+import java.util.stream.StreamSupport
 import kotlin.streams.asSequence
 
 /**
@@ -55,7 +57,7 @@ object M3uParser {
     @JvmOverloads
     fun parse(m3uFile: Path, charset: Charset = Charsets.UTF_8): List<M3uEntry> {
         require(Files.isRegularFile(m3uFile)) { "$m3uFile is not a file" }
-        return parse(Files.lines(m3uFile, charset).asSequence(), m3uFile.parent)
+        return parse(Files.lines(m3uFile, charset).asSequence(), m3uFile.parent).toList()
     }
 
     /**
@@ -70,7 +72,7 @@ object M3uParser {
     @JvmStatic
     @JvmOverloads
     fun parse(m3uContentReader: InputStreamReader, baseDir: Path? = null): List<M3uEntry> =
-        m3uContentReader.buffered().useLines { parse(it, baseDir) }
+        m3uContentReader.buffered().useLines { parse(it, baseDir).toList() }
 
     /**
      * Parses the specified content of a `.m3u` file.
@@ -84,7 +86,7 @@ object M3uParser {
     @JvmStatic
     @JvmOverloads
     fun parse(m3uContent: String, baseDir: Path? = null): List<M3uEntry> =
-        parse(m3uContent.lineSequence(), baseDir)
+        parse(m3uContent.lineSequence(), baseDir).toList()
 
     /**
      * Recursively resolves all playlist files contained as entries in the given list.
@@ -102,56 +104,55 @@ object M3uParser {
     ): List<M3uEntry> = resolveRecursively(entries, charset)
 
     @Suppress("NestedBlockDepth", "ReturnCount")
-    private fun parse(lines: Sequence<String>, baseDir: Path?): List<M3uEntry> {
+    private fun parse(lines: Sequence<String>, baseDir: Path?): Sequence<M3uEntry> {
         val filtered = lines
             .filterNot { it.isBlank() }
             .map { it.trimEnd() }
             .dropWhile { it == EXTENDED_HEADER }
             .iterator()
 
-        if (!filtered.hasNext()) return emptyList()
+        if (!filtered.hasNext()) return emptySequence()
 
-        val entries = LinkedList<M3uEntry>()
+        return sequence {
+            var currentLine: String
+            var match: MatchResult? = null
 
-        var currentLine: String
-        var match: MatchResult? = null
-        while (filtered.hasNext()) {
-            currentLine = filtered.next()
+            while (filtered.hasNext()) {
+                currentLine = filtered.next()
 
-            while (currentLine.startsWith(COMMENT_START)) {
-                val newMatch = infoRegex.matchEntire(currentLine)
-                if (newMatch != null) {
-                    if (match != null) logger.debug { "Ignoring info line: ${match!!.value}" }
-                    match = newMatch
-                } else {
-                    logger.debug { "Ignoring comment line $currentLine" }
+                while (currentLine.startsWith(COMMENT_START)) {
+                    val newMatch = infoRegex.matchEntire(currentLine)
+                    if (newMatch != null) {
+                        if (match != null) logger.debug { "Ignoring info line: ${match!!.value}" }
+                        match = newMatch
+                    } else {
+                        logger.debug { "Ignoring comment line $currentLine" }
+                    }
+
+                    if (filtered.hasNext()) {
+                        currentLine = filtered.next()
+                    } else {
+                        return@sequence
+                    }
                 }
 
-                if (filtered.hasNext()) {
-                    currentLine = filtered.next()
+                val entry = if (currentLine.startsWith(COMMENT_START)) {
+                    continue
+                } else if (match == null) {
+                    parseSimple(currentLine, baseDir)
                 } else {
-                    return entries
+                    parseExtended(match, currentLine, baseDir)
                 }
-            }
 
-            val entry = if (currentLine.startsWith(COMMENT_START)) {
-                continue
-            } else if (match == null) {
-                parseSimple(currentLine, baseDir)
-            } else {
-                parseExtended(match, currentLine, baseDir)
-            }
+                match = null
 
-            match = null
-
-            if (entry != null) {
-                entries.add(entry)
-            } else {
-                logger.warn { "Ignored line $currentLine" }
+                if (entry != null) {
+                    yield(entry)
+                } else {
+                    logger.warn { "Ignored line $currentLine" }
+                }
             }
         }
-
-        return entries
     }
 
     private fun parseSimple(location: String, baseDir: Path?): M3uEntry? = try {
