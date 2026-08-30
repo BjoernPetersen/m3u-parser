@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.sonarqube)
-    alias(libs.plugins.detekt)
     alias(libs.plugins.versions)
     jacoco
     idea
@@ -83,12 +82,6 @@ sonar {
         property("sonar.organization", "bjoernpetersen")
         property("sonar.host.url", "https://sonarcloud.io")
     }
-}
-
-detekt {
-    toolVersion = libs.versions.detekt.get()
-    config.setFrom("$rootDir/buildConfig/detekt.yml")
-    buildUponDefaultConfig = true
 }
 
 jacoco {
