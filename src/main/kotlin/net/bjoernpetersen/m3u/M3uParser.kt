@@ -14,8 +14,10 @@ import java.nio.file.Path
 import java.time.Duration
 import java.util.LinkedList
 import java.util.Map.entry
+import java.util.stream.Stream
 import java.util.stream.StreamSupport
 import kotlin.streams.asSequence
+import kotlin.streams.asStream
 
 /**
  * Can be used to parse `.m3u` files.
@@ -65,6 +67,8 @@ object M3uParser {
      *
      * Comment lines and lines which can't be parsed are dropped.
      *
+     * The passed reader is closed after parsing.
+     *
      * @param m3uContentReader a reader reading the content of an `.m3u` file
      * @param baseDir a base dir for resolving relative paths
      * @return a list of all parsed entries in order
@@ -89,6 +93,58 @@ object M3uParser {
         parse(m3uContent.lineSequence(), baseDir).toList()
 
     /**
+     * Parses the specified file.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
+     * @param m3uFile a path to an .m3u file
+     * @param charset the file's encoding, defaults to UTF-8
+     * @return a list of all contained entries in order
+     * @throws IOException if file can't be read
+     * @throws IllegalArgumentException if file is not a regular file
+     */
+    @Throws(IOException::class)
+    @JvmStatic
+    @JvmOverloads
+    fun parseAsStream(m3uFile: Path, charset: Charset = Charsets.UTF_8): Stream<M3uEntry> {
+        require(Files.isRegularFile(m3uFile)) { "$m3uFile is not a file" }
+        return parse(Files.lines(m3uFile, charset).asSequence(), m3uFile.parent).asStream()
+    }
+
+    /**
+     * Parses the [InputStream] from the specified reader.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
+     * The passed reader is **not** closed after parsing.
+     *
+     * @param m3uContentReader a reader reading the content of an `.m3u` file
+     * @param baseDir a base dir for resolving relative paths
+     * @return a list of all parsed entries in order
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun parseAsStream(
+        m3uContentReader: InputStreamReader,
+        baseDir: Path? = null,
+    ): Stream<M3uEntry> =
+        parse(m3uContentReader.buffered().lines().asSequence(), baseDir).asStream()
+
+    /**
+     * Parses the specified content of a `.m3u` file.
+     *
+     * Comment lines and lines which can't be parsed are dropped.
+     *
+     * @param m3uContent the content of a `.m3u` file
+     * @param baseDir a base dir for resolving relative paths
+     * @return a list of all parsed entries in order
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun parseAsStream(m3uContent: String, baseDir: Path? = null): Stream<M3uEntry> =
+        parse(m3uContent.lineSequence(), baseDir).asStream()
+
+    /**
      * Recursively resolves all playlist files contained as entries in the given list.
      *
      * Note that unresolvable playlist file entries will be dropped.
@@ -101,7 +157,37 @@ object M3uParser {
     fun resolveNestedPlaylists(
         entries: List<M3uEntry>,
         charset: Charset = Charsets.UTF_8,
-    ): List<M3uEntry> = resolveRecursively(entries, charset)
+    ): List<M3uEntry> = resolveRecursively(entries.asSequence(), charset).toList()
+
+    /**
+     * Recursively resolves all playlist files contained as entries in the given iterable.
+     *
+     * Note that unresolvable playlist file entries will be dropped.
+     *
+     * @param entries an iterable of playlist entries
+     * @param charset the encoding to be used to read nested playlist files, defaults to UTF-8
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun resolveNestedPlaylistsAsStream(
+        entries: Iterable<M3uEntry>,
+        charset: Charset = Charsets.UTF_8,
+    ): Stream<M3uEntry> = resolveRecursively(entries.asSequence(), charset).asStream()
+
+    /**
+     * Recursively resolves all playlist files contained as entries in the given iterable.
+     *
+     * Note that unresolvable playlist file entries will be dropped.
+     *
+     * @param entries a stream of playlist entries
+     * @param charset the encoding to be used to read nested playlist files, defaults to UTF-8
+     */
+    @JvmStatic
+    @JvmOverloads
+    fun resolveNestedPlaylistsAsStream(
+        entries: Stream<M3uEntry>,
+        charset: Charset = Charsets.UTF_8,
+    ): Stream<M3uEntry> = resolveRecursively(entries.asSequence(), charset).asStream()
 
     @Suppress("NestedBlockDepth", "ReturnCount")
     private fun parse(lines: Sequence<String>, baseDir: Path?): Sequence<M3uEntry> {
@@ -204,37 +290,31 @@ object M3uParser {
     }
 
     private fun resolveRecursively(
-        source: List<M3uEntry>,
+        source: Sequence<M3uEntry>,
         charset: Charset,
-        result: MutableList<M3uEntry> = LinkedList(),
-    ): List<M3uEntry> {
+    ): Sequence<M3uEntry> = sequence {
         for (entry in source) {
             val location = entry.location
             if (location is MediaPath && location.isPlaylistPath) {
-                resolveNestedPlaylist(location.path, charset, result)
+                yieldAll(resolveNestedPlaylist(location.path, charset))
             } else {
-                result.add(entry)
+                yield(entry)
             }
         }
-        return result
     }
 
-    private fun resolveNestedPlaylist(
-        path: Path,
-        charset: Charset,
-        result: MutableList<M3uEntry>,
-    ) {
+    private fun resolveNestedPlaylist(path: Path, charset: Charset): Sequence<M3uEntry> {
         if (!Files.isRegularFile(path)) {
-            return
+            return emptySequence()
         }
 
         val parsed = try {
-            parse(path, charset)
+            parseAsStream(path, charset)
         } catch (e: IOException) {
             logger.warn(e) { "Could not parse nested playlist file: $path" }
-            return
+            return emptySequence()
         }
 
-        resolveRecursively(parsed, charset, result)
+        return resolveRecursively(parsed.asSequence(), charset)
     }
 }
