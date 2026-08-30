@@ -15,5 +15,4 @@ slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 [plugins]
 dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
 spotless = { id = "com.diffplug.spotless", version = "8.10.1" }
-sonarqube = { id = "org.sonarqube", version = "5.1.0.4882" }
 versions = { id = "io.github.ben-manes.versions", version = "0.61.0" }

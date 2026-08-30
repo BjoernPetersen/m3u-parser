@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.spotless)
-    alias(libs.plugins.sonarqube)
     alias(libs.plugins.versions)
     jacoco
     idea
@@ -72,15 +71,6 @@ spotless {
         target("**/*.md")
         lineEndings = LineEnding.UNIX
         endWithNewline()
-    }
-}
-
-sonar {
-    properties {
-        property("sonar.gradle.skipCompile", "true")
-        property("sonar.projectKey", "BjoernPetersen_m3u-parser")
-        property("sonar.organization", "bjoernpetersen")
-        property("sonar.host.url", "https://sonarcloud.io")
     }
 }
 
