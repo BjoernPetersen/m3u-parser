@@ -163,7 +163,7 @@ publishing {
                     developer {
                         id.set("BjoernPetersen")
                         name.set("Björn Petersen")
-                        email.set("git@bjoernpetersen.net")
+                        email.set("maven-central@bjoernpetersen.net")
                         url.set("https://github.com/BjoernPetersen")
                     }
                 }
