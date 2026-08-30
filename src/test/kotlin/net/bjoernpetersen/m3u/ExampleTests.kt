@@ -18,11 +18,11 @@ class ExampleTests {
             .hasSize(131)
             .allMatch { it.duration == null && !it.title.isNullOrBlank() }
             .matches { list ->
-                val titles = list.asSequence().map { it.title }.distinct().count()
+                val titles = list.map { it.title }.distinct().count()
                 titles == list.size
             }
             .matches { list ->
-                val locations = list.asSequence().map { it.location }.distinct().toList()
+                val locations = list.map { it.location }.distinct().toList()
                 locations.size == list.size
             }
     }
@@ -37,7 +37,7 @@ class ExampleTests {
                 .hasSize(7)
                 .allMatch { it.duration == null && it.title == null }
                 .matches { list ->
-                    val titles = list.asSequence().map { it.location }.distinct().count()
+                    val titles = list.map { it.location }.distinct().count()
                     titles == list.size
                 }
         }
@@ -55,15 +55,15 @@ class ExampleTests {
                 .hasSize(7)
                 .allMatch { it.duration != null && !it.title.isNullOrBlank() }
                 .matches { list ->
-                    val titles = list.asSequence().map { it.duration }.distinct().count()
+                    val titles = list.map { it.duration }.distinct().count()
                     titles == list.size
                 }
                 .matches { list ->
-                    val titles = list.asSequence().map { it.title }.distinct().count()
+                    val titles = list.map { it.title }.distinct().count()
                     titles == list.size
                 }
                 .matches { list ->
-                    val titles = list.asSequence().map { it.location }.distinct().count()
+                    val titles = list.map { it.location }.distinct().count()
                     titles == list.size
                 }
         }
@@ -131,7 +131,7 @@ class ExampleTests {
                 .isNotSameAs(initial)
                 .hasSize(6)
                 .matches { list ->
-                    val locations = list.asSequence().map { it.location }.distinct().count()
+                    val locations = list.map { it.location }.distinct().count()
                     locations == list.size
                 }
         } finally {
