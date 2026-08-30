@@ -1,5 +1,4 @@
 [versions]
-detekt = "2.0.0-alpha.6"
 jacoco = "0.8.15"
 junit = "6.1.3"
 slf4j = "2.0.18"
@@ -14,7 +13,6 @@ slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
-detekt = { id = "dev.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
 spotless = { id = "com.diffplug.spotless", version = "8.10.1" }
 sonarqube = { id = "org.sonarqube", version = "5.1.0.4882" }
