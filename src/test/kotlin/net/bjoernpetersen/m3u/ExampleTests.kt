@@ -27,6 +27,27 @@ class ExampleTests {
             }
     }
 
+    @Test
+    fun testCleanRadioAsStream() {
+        val files = listOf("clean_radio_de.m3u")
+        exportFiles(files)
+        try {
+            assertThat(M3uParser.parseAsStream(Paths.get(FILE_DIR, files[0])))
+                .hasSize(131)
+                .allMatch { it.duration == null && !it.title.isNullOrBlank() }
+                .matches { list ->
+                    val titles = list.map { it.title }.distinct().count()
+                    titles == list.size
+                }
+                .matches { list ->
+                    val locations = list.map { it.location }.distinct().toList()
+                    locations.size == list.size
+                }
+        } finally {
+            deleteFiles(files)
+        }
+    }
+
     @TestFactory
     fun testWikiSimple(): List<DynamicTest> = listOf(
         "wiki_simple.m3u",
@@ -55,17 +76,45 @@ class ExampleTests {
                 .hasSize(7)
                 .allMatch { it.duration != null && !it.title.isNullOrBlank() }
                 .matches { list ->
-                    val titles = list.map { it.duration }.distinct().count()
-                    titles == list.size
+                    val distinctCount = list.map { it.duration }.distinct().count()
+                    distinctCount == list.size
                 }
                 .matches { list ->
-                    val titles = list.map { it.title }.distinct().count()
-                    titles == list.size
+                    val distinctCount = list.map { it.title }.distinct().count()
+                    distinctCount == list.size
                 }
                 .matches { list ->
-                    val titles = list.map { it.location }.distinct().count()
-                    titles == list.size
+                    val distinctCount = list.map { it.location }.distinct().count()
+                    distinctCount == list.size
                 }
+        }
+    }
+
+    @TestFactory
+    fun testWikiExtendedAsStream(): List<DynamicTest> = listOf(
+        "wiki_extended.m3u",
+        "wiki_extended_missing_header.m3u",
+        "wiki_extended_comments.m3u",
+        "wiki_extended_duplicate_info_line.m3u",
+    ).map { name ->
+        dynamicTest(name) {
+            javaClass.getResourceAsStream(name).reader().use { reader ->
+                assertThat(M3uParser.parseAsStream(reader))
+                    .hasSize(7)
+                    .allMatch { it.duration != null && !it.title.isNullOrBlank() }
+                    .matches { list ->
+                        val distinctCount = list.map { it.duration }.distinct().count()
+                        distinctCount == list.size
+                    }
+                    .matches { list ->
+                        val distinctCount = list.map { it.title }.distinct().count()
+                        distinctCount == list.size
+                    }
+                    .matches { list ->
+                        val distinctCount = list.map { it.location }.distinct().count()
+                        distinctCount == list.size
+                    }
+            }
         }
     }
 
@@ -128,7 +177,27 @@ class ExampleTests {
                 .hasSize(4)
 
             assertThat(M3uParser.resolveNestedPlaylists(initial))
-                .isNotSameAs(initial)
+                .isNotEqualTo(initial)
+                .hasSize(6)
+                .matches { list ->
+                    val locations = list.map { it.location }.distinct().count()
+                    locations == list.size
+                }
+        } finally {
+            deleteFiles(files)
+        }
+    }
+
+    @Test
+    fun testRecursiveResolutionAsStream() {
+        val files = listOf("rec_1.m3u", "rec_2.m3u", "rec_3.m3u")
+        exportFiles(files)
+        try {
+            val initial = M3uParser.parse(Paths.get(FILE_DIR, "rec_1.m3u"))
+            assertThat(initial)
+                .hasSize(4)
+
+            assertThat(M3uParser.resolveNestedPlaylistsAsStream(initial))
                 .hasSize(6)
                 .matches { list ->
                     val locations = list.map { it.location }.distinct().count()
