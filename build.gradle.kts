@@ -9,7 +9,8 @@ plugins {
     jacoco
     idea
 
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.4.10"
+
     `java-library`
 
     alias(libs.plugins.dokka)
@@ -31,7 +32,7 @@ idea {
 }
 
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(26)
 
     compilerOptions {
         jvmTarget = JvmTarget.JVM_1_8
