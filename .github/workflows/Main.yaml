@@ -4,7 +4,17 @@ on:
     branches: [ main ]
   pull_request: { }
 
+permissions:
+  contents: read
+
 jobs:
+  required-meta:
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    uses: BlindfoldedSurgery/actions-meta/.github/workflows/required.yml@v2
+
   check:
     name: Test and Lint
     runs-on: ubuntu-24.04
