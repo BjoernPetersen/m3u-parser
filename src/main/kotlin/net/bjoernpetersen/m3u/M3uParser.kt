@@ -33,7 +33,7 @@ object M3uParser {
     private const val KEY_VALUE_PAIRS = 2
     private const val TITLE = 3
     private const val EXTENDED_INFO =
-        """${COMMENT_START}EXTINF:([-]?\d+)(.*?),(.+)"""
+        """${COMMENT_START}EXTINF:(-?\d+)(.*?),(.+)"""
 
     private val logger = KotlinLogging.logger { }
 
