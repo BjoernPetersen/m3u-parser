@@ -80,14 +80,6 @@ jacoco {
 }
 
 tasks {
-    "processResources"(ProcessResources::class) {
-        filesMatching("**/version.properties") {
-            filter {
-                it.replace("%APP_VERSION%", version.toString())
-            }
-        }
-    }
-
     withType<Test> {
         useJUnitPlatform()
     }
