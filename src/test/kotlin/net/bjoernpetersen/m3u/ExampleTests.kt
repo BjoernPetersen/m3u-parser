@@ -11,7 +11,7 @@ import org.junit.jupiter.api.TestFactory
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class M3uParserExampleTest {
+class ExampleTests {
     @Test
     fun testCleanRadio() {
         assertThat(M3uParser.parse(javaClass.getResourceAsStream("clean_radio_de.m3u").reader()))
