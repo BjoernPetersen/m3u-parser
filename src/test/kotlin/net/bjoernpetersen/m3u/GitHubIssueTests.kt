@@ -16,4 +16,17 @@ class GitHubIssueTests {
             entries[0].location,
         )
     }
+
+    @Test
+    fun testIssue238Link() {
+        val entries = M3uParser.parse(
+            javaClass.getResourceAsStream("issue-238-title-comma.m3u").reader(),
+        )
+        assertEquals(1, entries.size)
+
+        assertEquals(
+            "Pink Floyd - Another Brick In The Wall, Pt. 2 - 2011 Remastered Version",
+            entries[0].title,
+        )
+    }
 }
