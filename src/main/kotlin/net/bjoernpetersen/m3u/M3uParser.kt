@@ -69,9 +69,8 @@ object M3uParser {
      */
     @JvmStatic
     @JvmOverloads
-    fun parse(m3uContentReader: InputStreamReader, baseDir: Path? = null): List<M3uEntry> {
-        return m3uContentReader.buffered().useLines { parse(it, baseDir) }
-    }
+    fun parse(m3uContentReader: InputStreamReader, baseDir: Path? = null): List<M3uEntry> =
+        m3uContentReader.buffered().useLines { parse(it, baseDir) }
 
     /**
      * Parses the specified content of a `.m3u` file.
@@ -84,9 +83,8 @@ object M3uParser {
      */
     @JvmStatic
     @JvmOverloads
-    fun parse(m3uContent: String, baseDir: Path? = null): List<M3uEntry> {
-        return parse(m3uContent.lineSequence(), baseDir)
-    }
+    fun parse(m3uContent: String, baseDir: Path? = null): List<M3uEntry> =
+        parse(m3uContent.lineSequence(), baseDir)
 
     /**
      * Recursively resolves all playlist files contained as entries in the given list.
@@ -101,9 +99,7 @@ object M3uParser {
     fun resolveNestedPlaylists(
         entries: List<M3uEntry>,
         charset: Charset = Charsets.UTF_8,
-    ): List<M3uEntry> {
-        return resolveRecursively(entries, charset)
-    }
+    ): List<M3uEntry> = resolveRecursively(entries, charset)
 
     @Suppress("NestedBlockDepth", "ReturnCount")
     private fun parse(lines: Sequence<String>, baseDir: Path?): List<M3uEntry> {
@@ -158,13 +154,11 @@ object M3uParser {
         return entries
     }
 
-    private fun parseSimple(location: String, baseDir: Path?): M3uEntry? {
-        return try {
-            M3uEntry(MediaLocation(location, baseDir))
-        } catch (e: IllegalArgumentException) {
-            logger.warn(e) { "Could not parse as location: $location" }
-            null
-        }
+    private fun parseSimple(location: String, baseDir: Path?): M3uEntry? = try {
+        M3uEntry(MediaLocation(location, baseDir))
+    } catch (e: IllegalArgumentException) {
+        logger.warn(e) { "Could not parse as location: $location" }
+        null
     }
 
     private fun parseExtended(infoMatch: MatchResult, location: String, baseDir: Path?): M3uEntry? {

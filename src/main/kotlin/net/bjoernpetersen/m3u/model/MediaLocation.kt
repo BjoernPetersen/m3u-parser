@@ -34,13 +34,9 @@ sealed class MediaLocation {
         return true
     }
 
-    override fun hashCode(): Int {
-        return url.toExternalForm().hashCode()
-    }
+    override fun hashCode(): Int = url.toExternalForm().hashCode()
 
-    override fun toString(): String {
-        return url.toExternalForm()
-    }
+    override fun toString(): String = url.toExternalForm()
 
     @Suppress("UndocumentedPublicClass")
     companion object {
@@ -57,24 +53,21 @@ sealed class MediaLocation {
          */
         @JvmStatic
         @JvmOverloads
-        operator fun invoke(location: String, dir: Path? = null): MediaLocation {
-            return tryParseFileUrl(location)?.let { MediaPath(it) }
+        operator fun invoke(location: String, dir: Path? = null): MediaLocation =
+            tryParseFileUrl(location)?.let { MediaPath(it) }
                 ?: tryParseUrl(location)?.let { MediaUrl(it) }
                 ?: tryParsePath(location, dir)?.let { MediaPath(it) }
                 ?: throw IllegalArgumentException("Could not parse as URL or path: $location")
-        }
 
-        private fun tryParsePath(location: String, dir: Path?): Path? {
-            return try {
-                if (dir == null) {
-                    Paths.get(location)
-                } else {
-                    dir.resolve(location)
-                }
-            } catch (e: InvalidPathException) {
-                logger.debug(e) { "Tried to parse an invalid path" }
-                null
+        private fun tryParsePath(location: String, dir: Path?): Path? = try {
+            if (dir == null) {
+                Paths.get(location)
+            } else {
+                dir.resolve(location)
             }
+        } catch (e: InvalidPathException) {
+            logger.debug(e) { "Tried to parse an invalid path" }
+            null
         }
 
         private fun tryParseFileUrl(location: String): Path? {
@@ -97,22 +90,20 @@ sealed class MediaLocation {
             }
         }
 
-        private fun tryParseUrl(location: String): URL? {
-            return try {
-                val uri = URI(location)
-                if (uri.isAbsolute) {
-                    uri.toURL()
-                } else {
-                    logger.debug { "Received URI without scheme component: $location" }
-                    null
-                }
-            } catch (e: URISyntaxException) {
-                logger.debug(e) { "Could not parse as URI: $location" }
-                null
-            } catch (e: MalformedURLException) {
-                logger.debug { "Could not convert URI to URL: $location" }
+        private fun tryParseUrl(location: String): URL? = try {
+            val uri = URI(location)
+            if (uri.isAbsolute) {
+                uri.toURL()
+            } else {
+                logger.debug { "Received URI without scheme component: $location" }
                 null
             }
+        } catch (e: URISyntaxException) {
+            logger.debug(e) { "Could not parse as URI: $location" }
+            null
+        } catch (e: MalformedURLException) {
+            logger.debug { "Could not convert URI to URL: $location" }
+            null
         }
     }
 }
@@ -137,9 +128,7 @@ class MediaPath internal constructor(val path: Path) : MediaLocation() {
     val isPlaylistPath: Boolean
         get() = path.fileName.toString().endsWith(M3U_EXTENSION)
 
-    override fun toString(): String {
-        return path.toString()
-    }
+    override fun toString(): String = path.toString()
 
     private companion object {
         const val M3U_EXTENSION = ".m3u"
